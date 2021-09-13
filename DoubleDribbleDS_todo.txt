@@ -1,0 +1,22 @@
+DoubleDribbleDS To do
+---------------------
+
+
+
+Misc:
+	Pad left and right to switch Tabs in GUI?
+
+Graphic:
+	See K005849_todo.txt
+
+CPU:
+	Timing?
+
+GUI:
+	Show Coin counter.
+
+Sound:
+	YM2203, render each channel individualy, all operators + ADSR + feedback.
+
+Games:
+
