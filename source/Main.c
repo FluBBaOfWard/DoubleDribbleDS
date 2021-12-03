@@ -85,7 +85,6 @@ int main(int argc, char **argv) {
 		if (!pauseEmulation) {
 			run();
 		}
-//		mmStreamUpdate();
 	}    
 	return 0;
 }

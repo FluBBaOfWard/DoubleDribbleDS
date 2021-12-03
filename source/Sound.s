@@ -16,7 +16,6 @@
 	.global soundRamW
 
 	.extern pauseEmulation
-	.extern powerButton
 
 
 	.syntax unified

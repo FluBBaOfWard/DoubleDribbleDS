@@ -41,6 +41,7 @@
 		9C8F3407248BA81600996E5A /* AY38910.i */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c.preprocessed; path = AY38910.i; sourceTree = "<group>"; };
 		9C8F3408248BA84800996E5A /* YM2203.i */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c.preprocessed; path = YM2203.i; sourceTree = "<group>"; };
 		9C8F3409248BA84800996E5A /* YM2203.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YM2203.h; sourceTree = "<group>"; };
+		9CAB1A1D275A1EF100182F62 /* VLM503Asm.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = VLM503Asm.s; sourceTree = "<group>"; };
 		9CBEE0E126EFC6B70095347A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9CBEE0E226EFC6FD0095347A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9CBEE0E326EFC70B0095347A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -132,8 +133,8 @@
 			isa = PBXGroup;
 			children = (
 				A40F3DBC1D8078130025AAD3 /* AY38910 */,
-				A40F3DC31D8078130025AAD3 /* History.txt */,
 				9CBEE0E526EFC7220095347A /* README.md */,
+				A40F3DC31D8078130025AAD3 /* History.txt */,
 				A40F3DC51D8078130025AAD3 /* Version.h */,
 				9C8F3409248BA84800996E5A /* YM2203.h */,
 				9C8F3408248BA84800996E5A /* YM2203.i */,
@@ -145,9 +146,9 @@
 		A40F3DBC1D8078130025AAD3 /* AY38910 */ = {
 			isa = PBXGroup;
 			children = (
+				9CBEE0E626EFC7500095347A /* README.md */,
 				9C3D5ADC25E3E52800E8CD56 /* AY38910ToDo.txt */,
 				A40F3DC01D8078130025AAD3 /* History.txt */,
-				9CBEE0E626EFC7500095347A /* README.md */,
 				A40F3DC21D8078130025AAD3 /* Version.h */,
 				9C8F3406248BA81600996E5A /* AY38910.h */,
 				9C8F3407248BA81600996E5A /* AY38910.i */,
@@ -168,8 +169,8 @@
 		A473057D1D575449004F6525 /* K005849 */ = {
 			isa = PBXGroup;
 			children = (
-				A47305811D575449004F6525 /* K005849_todo.txt */,
 				9CBEE0E326EFC70B0095347A /* README.md */,
+				A47305811D575449004F6525 /* K005849_todo.txt */,
 				A473057E1D575449004F6525 /* History.txt */,
 				A47305821D575449004F6525 /* Version.h */,
 				A473057F1D575449004F6525 /* K005849.h */,
@@ -182,8 +183,8 @@
 		A47305831D577EF2004F6525 /* ARM6809 */ = {
 			isa = PBXGroup;
 			children = (
-				9CC5FEBA22E9ED4500AFB8DF /* ARM6809ToDo.txt */,
 				9CBEE0E226EFC6FD0095347A /* README.md */,
+				9CC5FEBA22E9ED4500AFB8DF /* ARM6809ToDo.txt */,
 				9C4B984C25BC67B200A3F3B0 /* History.txt */,
 				9C4B984D25BC67B200A3F3B0 /* Version.h */,
 				9C4B984A25BC67B200A3F3B0 /* ARM6809.h */,
@@ -197,10 +198,11 @@
 		A47AFF1B20DFB84B0081DB4E /* VLM5030 */ = {
 			isa = PBXGroup;
 			children = (
-				A45F0A4120FE556000C7155E /* VLM5030_todo.txt */,
 				9CBEE0E426EFC7170095347A /* README.md */,
+				A45F0A4120FE556000C7155E /* VLM5030_todo.txt */,
 				A45F0A3F20FE556000C7155E /* History.txt */,
 				A45F0A4020FE556000C7155E /* Version.h */,
+				9CAB1A1D275A1EF100182F62 /* VLM503Asm.s */,
 				A47AFF1D20DFB84B0081DB4E /* vlm5030.h */,
 				A47AFF1C20DFB84B0081DB4E /* vlm5030.c */,
 			);
