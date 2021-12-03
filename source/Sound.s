@@ -39,6 +39,7 @@ soundReset:
 	mov r0,#0				;@ No irq func
 	ldr ymptr,=YM2203_0
 	bl ym2203Reset			;@ Sound
+	ldr ymptr,=YM2203_0
 	ldr r0,=VLM_R
 	str r0,[ymptr,#ayPortBInFptr]
 	ldr r0,=VLM_W
