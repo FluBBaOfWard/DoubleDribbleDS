@@ -213,7 +213,7 @@
 			isa = PBXGroup;
 			children = (
 				9C7BB94325FBB29500EA9C9C /* graphics */,
-				A47F094D208797B3004E1DA6 /* unzip */,
+				A47F094D208797B3004E1DA6 /* Unzip */,
 				9CBEE0E726EFC7670095347A /* README.md */,
 				9C7BB94225FBB29500EA9C9C /* nds_asm.h */,
 				9CBEE0E826EFC7E60095347A /* EmuSettings.h */,
@@ -231,7 +231,7 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		A47F094D208797B3004E1DA6 /* unzip */ = {
+		A47F094D208797B3004E1DA6 /* Unzip */ = {
 			isa = PBXGroup;
 			children = (
 				A47F094F208797B3004E1DA6 /* puff.h */,
@@ -239,7 +239,7 @@
 				A47F0950208797B3004E1DA6 /* unzipnds.h */,
 				A47F094E208797B3004E1DA6 /* unzipnds.c */,
 			);
-			path = unzip;
+			path = Unzip;
 			sourceTree = "<group>";
 		};
 		A48CC0251618E65200465E20 /* source */ = {
@@ -332,7 +332,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVKITARM = $DEVKITPRO/devkitarm;
-				DEVKITPRO = /opt/devkitpro_old;
+				DEVKITPRO = /opt/devkitpro;
 				PRODUCT_NAME = DoubleDribbleDS;
 			};
 			name = Debug;

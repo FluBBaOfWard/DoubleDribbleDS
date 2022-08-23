@@ -1,4 +1,4 @@
-# DoubleDribbleDS V0.4.2
+# DoubleDribbleDS V0.4.3
 
 This is a Double Dribble - Arcade emulator for the NDS.
 It has no tile priority support.
