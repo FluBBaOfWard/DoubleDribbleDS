@@ -1,6 +1,6 @@
 #ifdef __arm__
 
-#include "equates.h"
+#include "Equates.h"
 #include "ARM6809/ARM6809mac.h"
 #include "K005849/K005849.i"
 
