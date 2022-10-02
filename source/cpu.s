@@ -4,8 +4,11 @@
 #include "ARM6809/ARM6809.i"
 #include "K005849/K005849.i"
 
-	.global cpuReset
+#define CYCLE_PSL (99)
+
 	.global run
+	.global stepFrame
+	.global cpuReset
 	.global frameTotal
 	.global waitMaskIn
 	.global waitMaskOut
@@ -24,7 +27,7 @@
 	.section .text
 	.align 2
 ;@----------------------------------------------------------------------------
-run:		;@ Return after 1 frame
+run:						;@ Return after X frame(s)
 	.type   run STT_FUNC
 ;@----------------------------------------------------------------------------
 	ldrh r0,waitCountIn
@@ -57,24 +60,21 @@ runStart:
 konamiFrameLoop:
 ;@--------------------------------------
 	ldr m6809optbl,=m6809CPU2
-	ldr r0,cyclesPerScanline
-	b m6809RestoreAndRunXCycles
-DDCPU2End:
+	mov r0,#CYCLE_PSL
+	bl m6809RestoreAndRunXCycles
 	add r0,m6809optbl,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}	;@ Save M6809 state
 	bl YM0_Run
 ;@--------------------------------------
 	ldr m6809optbl,=m6809CPU1
-	ldr r0,cyclesPerScanline
-	b m6809RestoreAndRunXCycles
-DDCPU1End:
+	mov r0,#CYCLE_PSL
+	bl m6809RestoreAndRunXCycles
 	add r0,m6809optbl,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}	;@ Save M6809 state
 ;@--------------------------------------
 	ldr m6809optbl,=m6809OpTable
-	ldr r0,cyclesPerScanline
-	b m6809RestoreAndRunXCycles
-DDCPU0End:
+	mov r0,#CYCLE_PSL
+	bl m6809RestoreAndRunXCycles
 	add r0,m6809optbl,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}	;@ Save M6809 state
 ;@--------------------------------------
@@ -116,6 +116,52 @@ waitMaskIn:			.byte 0
 waitCountOut:		.byte 0
 waitMaskOut:		.byte 0
 
+;@----------------------------------------------------------------------------
+stepFrame:						;@ Return after 1 frame
+	.type   stepFrame STT_FUNC
+;@----------------------------------------------------------------------------
+	stmfd sp!,{r4-r11,lr}
+;@--------------------------------------
+konamiStepLoop:
+;@--------------------------------------
+	ldr m6809optbl,=m6809CPU2
+	mov r0,#CYCLE_PSL
+	bl m6809RestoreAndRunXCycles
+	add r0,m6809optbl,#m6809Regs
+	stmia r0,{m6809f-m6809pc,m6809sp}	;@ Save M6809 state
+	bl YM0_Run
+;@--------------------------------------
+	ldr m6809optbl,=m6809CPU1
+	mov r0,#CYCLE_PSL
+	bl m6809RestoreAndRunXCycles
+	add r0,m6809optbl,#m6809Regs
+	stmia r0,{m6809f-m6809pc,m6809sp}	;@ Save M6809 state
+;@--------------------------------------
+	ldr m6809optbl,=m6809OpTable
+	mov r0,#CYCLE_PSL
+	bl m6809RestoreAndRunXCycles
+	add r0,m6809optbl,#m6809Regs
+	stmia r0,{m6809f-m6809pc,m6809sp}	;@ Save M6809 state
+;@--------------------------------------
+	ldr koptr,=k005885_1
+	bl doScanline
+	ldr koptr,=k005885_0
+	bl doScanline
+	cmp r0,#0
+	bne konamiStepLoop
+
+;@--------------------------------------
+	ldr r0,=gGammaValue
+	ldrb r0,[r0]
+	bl paletteInit
+	bl paletteTxAll
+
+	ldr r1,frameTotal
+	add r1,r1,#1
+	str r1,frameTotal
+
+	ldmfd sp!,{r4-r11,lr}
+	bx lr
 ;@----------------------------------------------------------------------------
 cpu01SetFIRQ:
 ;@----------------------------------------------------------------------------
@@ -163,7 +209,7 @@ cpuReset:		;@ Called by loadCart/resetGame
 	stmfd sp!,{lr}
 
 ;@---Speed - 1.5MHz / 60Hz		;Double Dribble.
-	ldr r0,=99
+	ldr r0,=CYCLE_PSL
 	str r0,cyclesPerScanline
 	ldr m6809optbl,=m6809OpTable
 
@@ -183,10 +229,7 @@ cpuReset:		;@ Called by loadCart/resetGame
 	adr r4,cpuMapData
 	bl mapMemory
 
-	adr r0,DDCPU0End
-	str r0,[m6809optbl,#m6809NextTimeout]
-	str r0,[m6809optbl,#m6809NextTimeout_]
-
+	mov r0,m6809optbl
 	bl m6809Reset
 
 ;@--------------------------------------
@@ -195,10 +238,7 @@ cpuReset:		;@ Called by loadCart/resetGame
 	adr r4,cpuMapData+8
 	bl mapMemory
 
-	adr r0,DDCPU1End
-	str r0,[m6809optbl,#m6809NextTimeout]
-	str r0,[m6809optbl,#m6809NextTimeout_]
-
+	mov r0,m6809optbl
 	bl m6809Reset
 
 ;@--------------------------------------
@@ -207,10 +247,7 @@ cpuReset:		;@ Called by loadCart/resetGame
 	adr r4,cpuMapData+16
 	bl mapMemory
 
-	adr r0,DDCPU2End
-	str r0,[m6809optbl,#m6809NextTimeout]
-	str r0,[m6809optbl,#m6809NextTimeout_]
-
+	mov r0,m6809optbl
 	bl m6809Reset
 
 
