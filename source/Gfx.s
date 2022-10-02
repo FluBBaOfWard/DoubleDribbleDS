@@ -1,7 +1,7 @@
 #ifdef __arm__
 
 #include "Shared/nds_asm.h"
-#include "Equates.h"
+#include "Shared/EmuSettings.h"
 #include "ARM6809/ARM6809.i"
 #include "K005849/K005849.i"
 
@@ -14,8 +14,8 @@
 	.global gfxState
 	.global gFlicker
 	.global gTwitch
-	.global g_scaling
-	.global g_gfxMask
+	.global gScaling
+	.global gGfxMask
 	.global vblIrqHandler
 	.global yStart
 
@@ -51,7 +51,7 @@ gfxInit:					;@ Called from machineInit
 	adr r0,scaleParms
 	bl setupSpriteScaling
 
-	ldr r0,=g_gammaValue
+	ldr r0,=gGammaValue
 	ldrb r0,[r0]
 	bl paletteInit				;@ Do palette mapping
 	bl paletteTxAll				;@ Transfer it
@@ -232,7 +232,7 @@ vblIrqHandler:
 	stmfd sp!,{r4-r8,lr}
 	bl calculateFPS
 
-	ldrb r0,g_scaling
+	ldrb r0,gScaling
 	cmp r0,#UNSCALED
 	moveq r6,#0
 	ldrne r6,=0x80000000 + ((GAME_HEIGHT-SCREEN_HEIGHT)*0x10000) / (SCREEN_HEIGHT-1)		;@ NDS 0x2B10 (was 0x2AAB)
@@ -305,7 +305,7 @@ scrolLoop2:
 	strh r0,[r6,#REG_WIN0H]
 
 	mov r0,#0x0013
-	ldrb r1,g_gfxMask
+	ldrb r1,gGfxMask
 	bic r0,r0,r1
 	strh r0,[r6,#REG_WININ]
 
@@ -318,8 +318,8 @@ gFlicker:		.byte 1
 				.space 2
 gTwitch:		.byte 0
 
-g_scaling:		.byte 1
-g_gfxMask:		.byte 0
+gScaling:		.byte 1
+gGfxMask:		.byte 0
 yStart:			.byte 0
 				.byte 0
 ;@----------------------------------------------------------------------------

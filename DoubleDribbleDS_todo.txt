@@ -4,6 +4,7 @@ DoubleDribbleDS To do
 
 
 Misc:
+	Add "Step Frame"
 	Pad left and right to switch Tabs in GUI?
 
 Graphic:

@@ -86,7 +86,7 @@ DDCPU0End:
 	bne konamiFrameLoop
 
 ;@--------------------------------------
-	ldr r0,=g_gammaValue
+	ldr r0,=gGammaValue
 	ldrb r0,[r0]
 	bl paletteInit
 	bl paletteTxAll

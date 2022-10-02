@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-extern u8 g_gammaValue;
+extern u8 gGammaValue;
 
 void setupGUI(void);
 void enterGUI(void);
@@ -30,6 +30,7 @@ void swapABSet(void);
 
 void scalingSet(void);
 void gammaSet(void);
+void fgrLayerSet(void);
 void bgrLayerSet(void);
 void sprLayerSet(void);
 
