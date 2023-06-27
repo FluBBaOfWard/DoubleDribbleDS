@@ -84,6 +84,8 @@ gfxReset:					;@ Called with CPU reset
 	ldr r2,=cpu012SetIRQ
 	ldr r3,=emuRAM0
 	bl k005885Reset0
+	ldrb r0,gfxChipType
+	bl k005849SetType
 	ldr r0,=BG_GFX+0x8000		;@ Tile ram 2
 	str r0,[koptr,#bgrGfxDest]
 	ldr r0,=Gfx1Bg
@@ -105,6 +107,8 @@ gfxReset:					;@ Called with CPU reset
 	mov r2,#0
 	ldr r3,=emuRAM1
 	bl k005885Reset1
+	ldrb r0,gfxChipType
+	bl k005849SetType
 	ldr r0,=BG_GFX+0x10000		;@ Tile ram 4
 	str r0,[koptr,#bgrGfxDest]
 	ldr r0,=Gfx2Bg
@@ -490,16 +494,12 @@ gfxState:
 adjustBlend:
 	.long 0
 windowTop:
-	.long 0
-wTop:
-	.long 0,0,0		;@ windowtop  (this label too)   L/R scrolling in unscaled mode
+	.long 0,0,0,0		;@ L/R scrolling in unscaled mode
 
-	.byte 0
-	.byte 0
-	.byte 0
-	.byte 0
+gfxChipType:
+	.byte CHIP_K005885			;@ K005849 or K005885
+	.space 3
 
-	.pool
 	.section .bss
 	.align 2
 scrollTemp:
