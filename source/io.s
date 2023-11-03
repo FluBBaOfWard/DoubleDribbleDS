@@ -2,10 +2,12 @@
 
 #include "ARM6809/ARM6809.i"
 #include "K005849/K005849.i"
+#include "Shared/EmuMenu.i"
 
 	.global ioReset
 	.global IO_R
 	.global IO_W
+	.global convertInput
 	.global refreshEMUjoypads
 
 	.global joyCfg
@@ -25,6 +27,14 @@
 ;@----------------------------------------------------------------------------
 ioReset:
 ;@----------------------------------------------------------------------------
+	bx lr
+;@----------------------------------------------------------------------------
+convertInput:			;@ Convert from device keys to target r0=input/output
+	.type convertInput STT_FUNC
+;@----------------------------------------------------------------------------
+	mvn r1,r0
+	tst r1,#KEY_L|KEY_R			;@ Keys to open menu
+	orreq r0,r0,#KEY_OPEN_MENU
 	bx lr
 ;@----------------------------------------------------------------------------
 refreshEMUjoypads:			;@ Call every frame

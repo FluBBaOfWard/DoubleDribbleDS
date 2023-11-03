@@ -8,6 +8,7 @@
 
 	.global run
 	.global stepFrame
+	.global cpuInit
 	.global cpuReset
 	.global frameTotal
 	.global waitMaskIn
@@ -17,6 +18,7 @@
 	.global cpu01SetNMI
 //	.global cpu2SetIRQ
 
+	.global m6809CPU0
 	.global m6809CPU1
 	.global m6809CPU2
 
@@ -24,7 +26,11 @@
 	.syntax unified
 	.arm
 
-	.section .text
+#ifdef GBA
+	.section .ewram, "ax", %progbits	;@ For the GBA
+#else
+	.section .text						;@ For anything else
+#endif
 	.align 2
 ;@----------------------------------------------------------------------------
 run:						;@ Return after X frame(s)
@@ -59,23 +65,23 @@ runStart:
 ;@--------------------------------------
 konamiFrameLoop:
 ;@--------------------------------------
-	ldr m6809optbl,=m6809CPU2
+	ldr m6809ptr,=m6809CPU2
 	mov r0,#CYCLE_PSL
 	bl m6809RestoreAndRunXCycles
-	add r0,m6809optbl,#m6809Regs
+	add r0,m6809ptr,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}	;@ Save M6809 state
 	bl YM0_Run
 ;@--------------------------------------
-	ldr m6809optbl,=m6809CPU1
+	ldr m6809ptr,=m6809CPU1
 	mov r0,#CYCLE_PSL
 	bl m6809RestoreAndRunXCycles
-	add r0,m6809optbl,#m6809Regs
+	add r0,m6809ptr,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}	;@ Save M6809 state
 ;@--------------------------------------
-	ldr m6809optbl,=m6809OpTable
+	ldr m6809ptr,=m6809CPU0
 	mov r0,#CYCLE_PSL
 	bl m6809RestoreAndRunXCycles
-	add r0,m6809optbl,#m6809Regs
+	add r0,m6809ptr,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}	;@ Save M6809 state
 ;@--------------------------------------
 	ldr koptr,=k005885_1
@@ -124,23 +130,23 @@ stepFrame:						;@ Return after 1 frame
 ;@--------------------------------------
 konamiStepLoop:
 ;@--------------------------------------
-	ldr m6809optbl,=m6809CPU2
+	ldr m6809ptr,=m6809CPU2
 	mov r0,#CYCLE_PSL
 	bl m6809RestoreAndRunXCycles
-	add r0,m6809optbl,#m6809Regs
+	add r0,m6809ptr,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}	;@ Save M6809 state
 	bl YM0_Run
 ;@--------------------------------------
-	ldr m6809optbl,=m6809CPU1
+	ldr m6809ptr,=m6809CPU1
 	mov r0,#CYCLE_PSL
 	bl m6809RestoreAndRunXCycles
-	add r0,m6809optbl,#m6809Regs
+	add r0,m6809ptr,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}	;@ Save M6809 state
 ;@--------------------------------------
-	ldr m6809optbl,=m6809OpTable
+	ldr m6809ptr,=m6809CPU0
 	mov r0,#CYCLE_PSL
 	bl m6809RestoreAndRunXCycles
-	add r0,m6809optbl,#m6809Regs
+	add r0,m6809ptr,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}	;@ Save M6809 state
 ;@--------------------------------------
 	ldr koptr,=k005885_1
@@ -165,44 +171,56 @@ konamiStepLoop:
 ;@----------------------------------------------------------------------------
 cpu01SetFIRQ:
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r0,m6809optbl,lr}
-	ldr m6809optbl,=m6809OpTable
+	stmfd sp!,{r0,m6809ptr,lr}
+	ldr m6809ptr,=m6809CPU0
 	bl m6809SetFIRQPin
 	ldmfd sp!,{r0}
-	ldr m6809optbl,=m6809CPU1
+	ldr m6809ptr,=m6809CPU1
 	bl m6809SetFIRQPin
-	ldmfd sp!,{m6809optbl,pc}
+	ldmfd sp!,{m6809ptr,pc}
 ;@----------------------------------------------------------------------------
 cpu012SetIRQ:
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r0,m6809optbl,lr}
-	ldr m6809optbl,=m6809OpTable
+	stmfd sp!,{r0,m6809ptr,lr}
+	ldr m6809ptr,=m6809CPU0
 	bl m6809SetIRQPin
 	ldmfd sp,{r0}
-	ldr m6809optbl,=m6809CPU1
+	ldr m6809ptr,=m6809CPU1
 	bl m6809SetIRQPin
 	ldmfd sp!,{r0}
-	ldr m6809optbl,=m6809CPU2
+	ldr m6809ptr,=m6809CPU2
 	bl m6809SetIRQPin
-	ldmfd sp!,{m6809optbl,pc}
+	ldmfd sp!,{m6809ptr,pc}
 ;@----------------------------------------------------------------------------
 cpu01SetNMI:
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r0,m6809optbl,lr}
-	ldr m6809optbl,=m6809OpTable
+	stmfd sp!,{r0,m6809ptr,lr}
+	ldr m6809ptr,=m6809CPU0
 	bl m6809SetNMIPin
 	ldmfd sp!,{r0}
-	ldr m6809optbl,=m6809CPU1
+	ldr m6809ptr,=m6809CPU1
 	bl m6809SetNMIPin
-	ldmfd sp!,{m6809optbl,pc}
+	ldmfd sp!,{m6809ptr,pc}
 ;@----------------------------------------------------------------------------
 cpu2SetIRQ:
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{m6809optbl,lr}
-	ldr m6809optbl,=m6809CPU2
+	stmfd sp!,{m6809ptr,lr}
+	ldr m6809ptr,=m6809CPU2
 	bl m6809SetIRQPin
-	ldmfd sp!,{m6809optbl,pc}
+	ldmfd sp!,{m6809ptr,pc}
 
+;@----------------------------------------------------------------------------
+cpuInit:			;@ Called by machineInit
+;@----------------------------------------------------------------------------
+	stmfd sp!,{lr}
+	ldr r0,=m6809CPU0
+	bl m6809Init
+	ldr r0,=m6809CPU1
+	bl m6809Init
+	ldr r0,=m6809CPU2
+	bl m6809Init
+	ldmfd sp!,{lr}
+	bx lr
 ;@----------------------------------------------------------------------------
 cpuReset:		;@ Called by loadCart/resetGame
 ;@----------------------------------------------------------------------------
@@ -211,43 +229,32 @@ cpuReset:		;@ Called by loadCart/resetGame
 ;@---Speed - 1.5MHz / 60Hz		;Double Dribble.
 	ldr r0,=CYCLE_PSL
 	str r0,cyclesPerScanline
-	ldr m6809optbl,=m6809OpTable
-
-	ldr r0,=m6809CPU1
-	mov r1,m6809optbl
-	ldr r2,=m6809Size
-	bl memcpy
-
-	ldr r0,=m6809CPU2
-	mov r1,m6809optbl
-	ldr r2,=m6809Size
-	bl memcpy
-
 
 ;@--------------------------------------
+	ldr m6809ptr,=m6809CPU0
 
 	adr r4,cpuMapData
 	bl mapMemory
 
-	mov r0,m6809optbl
+	mov r0,m6809ptr
 	bl m6809Reset
 
 ;@--------------------------------------
-	ldr m6809optbl,=m6809CPU1
+	ldr m6809ptr,=m6809CPU1
 
 	adr r4,cpuMapData+8
 	bl mapMemory
 
-	mov r0,m6809optbl
+	mov r0,m6809ptr
 	bl m6809Reset
 
 ;@--------------------------------------
-	ldr m6809optbl,=m6809CPU2
+	ldr m6809ptr,=m6809CPU2
 
 	adr r4,cpuMapData+16
 	bl mapMemory
 
-	mov r0,m6809optbl
+	mov r0,m6809ptr
 	bl m6809Reset
 
 
@@ -281,6 +288,8 @@ cpuDataLoop:
 	.section .dtcm, "ax", %progbits				;@ For the NDS
 #endif
 ;@----------------------------------------------------------------------------
+m6809CPU0:
+	.space m6809Size
 m6809CPU1:
 	.space m6809Size
 m6809CPU2:
