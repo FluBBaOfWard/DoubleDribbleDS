@@ -4,9 +4,6 @@
 #include "ARM6809/ARM6809mac.h"
 #include "K005849/K005849.i"
 
-	.global machineInit
-	.global loadCart
-	.global m6809Mapper
 	.global emuFlags
 	.global romNum
 //	.global scaling
@@ -16,13 +13,15 @@
 	.global vromBase1
 	.global promBase
 	.global vlmBase
-
-	.global updateBankReg
 	.global bankReg
 	.global EMU_RAM
 	.global SOUND_RAM
 	.global ROM_Space
 
+	.global machineInit
+	.global loadCart
+	.global m6809Mapper
+	.global updateBankReg
 
 
 	.syntax unified

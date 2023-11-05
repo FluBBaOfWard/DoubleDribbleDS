@@ -6,21 +6,21 @@
 
 #define CYCLE_PSL (H_PIXEL_COUNT/4)
 
+	.global frameTotal
+	.global waitMaskIn
+	.global waitMaskOut
+	.global m6809CPU0
+	.global m6809CPU1
+	.global m6809CPU2
+
 	.global run
 	.global stepFrame
 	.global cpuInit
 	.global cpuReset
-	.global frameTotal
-	.global waitMaskIn
-	.global waitMaskOut
 	.global cpu01SetFIRQ
 	.global cpu012SetIRQ
 	.global cpu01SetNMI
 //	.global cpu2SetIRQ
-
-	.global m6809CPU0
-	.global m6809CPU1
-	.global m6809CPU2
 
 
 	.syntax unified
@@ -285,8 +285,11 @@ cpuDataLoop:
 
 ;@----------------------------------------------------------------------------
 #ifdef NDS
-	.section .dtcm, "ax", %progbits				;@ For the NDS
+	.section .dtcm, "ax", %progbits		;@ For the NDS
+#elif GBA
+	.section .iwram, "ax", %progbits	;@ For the GBA
 #endif
+	.align 2
 ;@----------------------------------------------------------------------------
 m6809CPU0:
 	.space m6809Size

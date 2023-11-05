@@ -2,6 +2,8 @@
 
 #include "YM2203/YM2203.i"
 
+	.extern pauseEmulation
+
 	.global soundInit
 	.global soundReset
 	.global VblSound2
@@ -14,8 +16,6 @@
 	.global YM0_W
 	.global soundRamR
 	.global soundRamW
-
-	.extern pauseEmulation
 
 
 	.syntax unified

@@ -4,12 +4,6 @@
 #include "K005849/K005849.i"
 #include "Shared/EmuMenu.i"
 
-	.global ioReset
-	.global IO_R
-	.global IO_W
-	.global convertInput
-	.global refreshEMUjoypads
-
 	.global joyCfg
 	.global EMUinput
 	.global gDipSwitch0
@@ -18,6 +12,12 @@
 	.global gDipSwitch3
 	.global coinCounter0
 	.global coinCounter1
+
+	.global ioReset
+	.global convertInput
+	.global refreshEMUjoypads
+	.global IO_R
+	.global IO_W
 
 	.syntax unified
 	.arm
