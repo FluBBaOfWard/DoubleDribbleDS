@@ -9,6 +9,7 @@
 //	.global scaling
 	.global cartFlags
 	.global romStart
+	.global mainCpu
 	.global vromBase0
 	.global vromBase1
 	.global promBase
@@ -101,15 +102,15 @@ loadCart: 		;@ Called from C:  r0=rom number, r1=emuflags
 //	ldr r7,=rawRom
 	ldr r7,=ROM_Space
 								;@ r7=rombase til end of loadcart so DON'T FUCK IT UP
-	str r7,romStart				;@ Set rom base
-	add r0,r7,#0x20000			;@ 0x20000
-	str r0,vromBase0			;@ Gfx1
-	add r0,r0,#0x40000
-	str r0,vromBase1			;@ Gfx2
-	add r0,r0,#0x80000
-	str r0,promBase				;@ Colour prom
-	add r0,r0,#0x100
-	str r0,vlmBase				;@ VLM rom data
+//	str r7,romStart				;@ Set rom base
+//	add r0,r7,#0x20000			;@ 0x20000
+//	str r0,vromBase0			;@ Gfx1
+//	add r0,r0,#0x40000
+//	str r0,vromBase1			;@ Gfx2
+//	add r0,r0,#0x80000
+//	str r0,promBase				;@ Colour prom
+//	add r0,r0,#0x100
+//	str r0,vlmBase				;@ VLM rom data
 
 ;@----------------------------------------------------------------------------
 	ldr r4,=MEMMAPTBL_
@@ -264,6 +265,7 @@ bankReg:
 	.long 0
 
 romStart:
+mainCpu:
 	.long 0
 vromBase0:
 	.long 0

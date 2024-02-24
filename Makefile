@@ -38,7 +38,7 @@ GRAPHICS	:=	graphics \
 # options for code generation
 #---------------------------------------------------------------------------------
 ARCH	:=	-march=armv5te -mtune=arm946e-s -mthumb -mthumb-interwork
-FLAGS	:=	-DARM9 -DNDS
+FLAGS	:=	-DARM9 -DNDS -DAY_UPSHIFT=2
 
 CFLAGS	:=	-g -Wall -O3 -fomit-frame-pointer -ffast-math $(ARCH)
 

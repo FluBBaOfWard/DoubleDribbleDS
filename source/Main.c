@@ -15,11 +15,6 @@
 #include "Sound.h"
 #include "VLM5030/vlm5030.h"
 
-#define sample_rate  32768
-#define buffer_size (320)
-//#define sample_rate 55930
-//#define buffer_size (512+16)
-
 static void checkTimeOut(void);
 static void setupGraphics(void);
 static void setupStream(void);
@@ -69,11 +64,12 @@ int main(int argc, char **argv) {
 	irqSet(IRQ_VBLANK, myVblank);
 	setupGUI();
 	getInput();
-	loadCart(0,0);
 	if ( initFileHelper() ) {
 		loadSettings();
 		autoLoadGame();
-	} else {
+	}
+	else {
+		loadCart(0,0);
 		drawText("fatInitDefault() failure.",23,0);
 	}
 
@@ -110,7 +106,8 @@ static void checkTimeOut() {
 //---------------------------------------------------------------------------------
 	if (EMUinput) {
 		sleepTimer = sleepTime;
-	} else {
+	}
+	else {
 		sleepTimer--;
 		if (sleepTimer < 0) {
 			sleepTimer = sleepTime;
