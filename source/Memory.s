@@ -9,6 +9,13 @@
 	.global rom_W
 	.global ram_W
 	.global mem6809R0
+	.global mem6809R1
+	.global mem6809R2
+	.global mem6809R3
+	.global mem6809R4
+	.global mem6809R5
+	.global mem6809R6
+	.global mem6809R7
 
 	.syntax unified
 	.arm
@@ -65,7 +72,7 @@ rom_W:						;@ Write ROM address (error)
 ram_W:						;@ Ram write (CPU0 $4000-$5FFF) (CPU1 $0000-$1FFF)
 ;@----------------------------------------------------------------------------
 	bic r1,addy,#0xfe000
-	ldr r2,=EMU_RAM
+	ldr r2,=SHARED_RAM
 	strb r0,[r2,r1]
 	bx lr
 

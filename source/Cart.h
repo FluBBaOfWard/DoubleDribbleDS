@@ -7,7 +7,7 @@ extern "C" {
 
 extern u8 bankReg;
 
-extern u8 EMU_RAM[0x2000];
+extern u8 SHARED_RAM[0x2000];
 extern u8 SOUND_RAM[0x800];
 extern u8 ROM_Space[0x10012C];
 extern u8 *mainCpu;

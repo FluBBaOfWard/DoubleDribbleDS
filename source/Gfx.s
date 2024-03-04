@@ -14,8 +14,8 @@
 
 	.global k005885_0
 	.global k005885_1
-	.global emuRAM0
-	.global emuRAM1
+	.global GFX_RAM0
+	.global GFX_RAM1
 	.global k005885Palette
 
 	.global gfxInit
@@ -84,7 +84,7 @@ gfxReset:					;@ Called with CPU reset
 	ldr r0,=cpu01SetNMI
 	ldr r1,=cpu01SetFIRQ
 	ldr r2,=cpu012SetIRQ
-	ldr r3,=emuRAM0
+	ldr r3,=GFX_RAM0
 	bl k005885Reset0
 	ldrb r0,gfxChipType
 	bl k005849SetType
@@ -107,7 +107,7 @@ gfxReset:					;@ Called with CPU reset
 	mov r0,#0
 	mov r1,#0
 	mov r2,#0
-	ldr r3,=emuRAM1
+	ldr r3,=GFX_RAM1
 	bl k005885Reset1
 	ldrb r0,gfxChipType
 	bl k005849SetType
@@ -528,11 +528,11 @@ EMUPALBUFF:
 	.space 0x400
 k005885Palette:
 	.space 0x80
-emuRAM0:
+GFX_RAM0:
 	.space 0x2000
 	.space SPRBLOCKCOUNT*4
 	.space BGBLOCKCOUNT*4
-emuRAM1:
+GFX_RAM1:
 	.space 0x2000
 	.space SPRBLOCKCOUNT*4
 	.space BGBLOCKCOUNT*4

@@ -16,8 +16,8 @@
 	.global ioReset
 	.global convertInput
 	.global refreshEMUjoypads
-	.global IO_R
-	.global IO_W
+	.global DDribbleIO_R
+	.global DDribbleIO_W
 
 	.syntax unified
 	.arm
@@ -151,7 +151,7 @@ Input5_R:
 	bx lr
 
 ;@----------------------------------------------------------------------------
-IO_R:						;@ I/O read (CPU 1 0x2000-0x3FFF)
+DDribbleIO_R:				;@ I/O read (CPU 1 0x2000-0x3FFF)
 ;@----------------------------------------------------------------------------
 	subs r1,addy,#0x2800
 	bmi soundRamR
@@ -171,7 +171,7 @@ IO_R:						;@ I/O read (CPU 1 0x2000-0x3FFF)
 	.long Input2_R				;@ 0x2803
 
 ;@----------------------------------------------------------------------------
-IO_W:						;@ I/O write (CPU 1 0x2000-0x3FFF)
+DDribbleIO_W:				;@ I/O write (CPU 1 0x2000-0x3FFF)
 ;@----------------------------------------------------------------------------
 	subs r1,addy,#0x2800
 	bmi soundRamW

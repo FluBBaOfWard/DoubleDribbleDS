@@ -50,8 +50,8 @@ int getStateSize() {
 
 int saveRam(void *state) {
 	int size = 0;
-	memcpy(state+size, EMU_RAM, sizeof(EMU_RAM));
-	size += sizeof(EMU_RAM);
+	memcpy(state+size, SHARED_RAM, sizeof(SHARED_RAM));
+	size += sizeof(SHARED_RAM);
 	memcpy(state+size, SOUND_RAM, sizeof(SOUND_RAM));
 	size += sizeof(SOUND_RAM);
 	memcpy(state+size, k005885Palette, sizeof(k005885Palette));
@@ -63,8 +63,8 @@ int saveRam(void *state) {
 
 int loadRam(const void *state) {
 	int size = 0;
-	memcpy(EMU_RAM, state+size, sizeof(EMU_RAM));
-	size += sizeof(EMU_RAM);
+	memcpy(SHARED_RAM, state+size, sizeof(SHARED_RAM));
+	size += sizeof(SHARED_RAM);
 	memcpy(SOUND_RAM, state+size, sizeof(SOUND_RAM));
 	size += sizeof(SOUND_RAM);
 	memcpy(k005885Palette, state+size, sizeof(k005885Palette));
@@ -76,10 +76,10 @@ int loadRam(const void *state) {
 }
 
 int getRamSize() {
-	return sizeof(EMU_RAM) + sizeof(SOUND_RAM) + sizeof(k005885Palette) + 4;
+	return sizeof(SHARED_RAM) + sizeof(SOUND_RAM) + sizeof(k005885Palette) + 4;
 }
 
-static const ArcadeRom ddribbleRoms[17] = {
+const ArcadeRom ddribbleRoms[17] = {
 	{ROM_REGION,   0x10000, (int)&mainCpu}, // 64k for CPU #0
 	{"690c03.bin", 0x10000, 0x07975a58},
 	// ROM_REGION( 0x10000, "cpu1", 0 )    // 64 for the CPU #1
@@ -102,14 +102,14 @@ static const ArcadeRom ddribbleRoms[17] = {
 	{"pal10l8-007553.bin", 0x002c, 0x0ae5a161},
 };
 
-static const ArcadeRom ddribblepRoms[23] = {
+const ArcadeRom ddribblepRoms[23] = {
 	{ROM_REGION,   0x10000, (int)&mainCpu}, // 64k for CPU #0
 	{"ebs_11-19.c19",   0x10000, 0x0a81c926},
 	// ROM_REGION( 0x10000, "cpu1", 0 )    // 64 for the CPU #1
 	{"eb_11-19.c12",    0x08000, 0x22130292},
 	// ROM_REGION( 0x10000, "cpu2", 0 )    // 64k for the SOUND CPU
 	{"master_sound.a6", 0x08000, 0x090e3a31},
-	{ROM_REGION,   0x20000, (int)&vromBase0}, // same content as parent
+	{ROM_REGION,   0x40000, (int)&vromBase0}, // same content as parent
 	{"v1a.e12",         0x10000, 0x53724765},
 	{"01a.e11",         0x10000, 0x1ae5d725},
 	{"v1b.e13",         0x10000, 0xd9dc6f1a},

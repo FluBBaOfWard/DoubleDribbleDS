@@ -14,7 +14,7 @@
 #include "K005849/Version.h"
 #include "YM2203/Version.h"
 
-#define EMUVERSION "V0.4.3 2024-02-24"
+#define EMUVERSION "V0.4.3 2024-03-04"
 
 static void uiDebug(void);
 
