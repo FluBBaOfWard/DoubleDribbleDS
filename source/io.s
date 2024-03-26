@@ -189,15 +189,13 @@ watchDogW:
 coinW:
 ;@----------------------------------------------------------------------------
 	tst r0,#0x01
-	ldrne r2,=coinCounter0
-	ldrne r1,[r2]
+	ldrne r1,coinCounter0
 	addne r1,r1,#1
-	strne r1,[r2]
+	strne r1,coinCounter0
 	tst r0,#0x02
-	ldrne r2,=coinCounter1
-	ldrne r1,[r2]
+	ldrne r1,coinCounter1
 	addne r1,r1,#1
-	strne r1,[r2]
+	strne r1,coinCounter1
 //	tst r0,#0x04			;@ END?
 //	tst r0,#0x08			;@ ROM A14?
 	bx lr

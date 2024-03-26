@@ -10,10 +10,10 @@
 	.global setMuteSoundGUI
 	.global setMuteSoundGame
 	.global VLMData_W
-	.global YM2203_0
-	.global YM0_Run
-	.global YM0_R
-	.global YM0_W
+	.global ym2203_0
+	.global ym2203_0_Run
+	.global ym2203_0_R
+	.global ym2203_0_W
 	.global soundRamR
 	.global soundRamW
 
@@ -36,10 +36,10 @@ soundInit:
 soundReset:
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{lr}
-	mov r1,#0				;@ No irq func
-	ldr r0,=YM2203_0
-	bl ym2203Reset			;@ Sound
-	ldr r0,=YM2203_0
+	mov r1,#0					;@ No irq func
+	ldr r0,=ym2203_0
+	bl ym2203Reset				;@ Sound
+	ldr r0,=ym2203_0
 	ldr r1,=VLM_R
 	str r1,[r0,#ayPortBInFptr]
 	ldr r1,=VLM_W
@@ -71,11 +71,11 @@ VblSound2:					;@ r0=length, r1=pointer
 	stmfd sp!,{r0,r1,r4,r5,lr}
 
 	ldr r1,pcmPtr0
-	ldr r2,=YM2203_0
+	ldr r2,=ym2203_0
 	bl ay38910Mixer
 	ldmfd sp,{r0}
 	ldr r1,pcmPtr1
-	ldr r2,=YM2203_0
+	ldr r2,=ym2203_0
 	bl ym2203Mixer
 
 	ldmfd sp,{r0}
@@ -140,12 +140,6 @@ silenceLoop:
 
 
 ;@----------------------------------------------------------------------------
-YM0_Run:
-;@----------------------------------------------------------------------------
-	mov r0,#230
-	ldr r1,=YM2203_0
-	b ym2203Run
-;@----------------------------------------------------------------------------
 VLM_R:
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r3,lr}
@@ -197,23 +191,29 @@ VLMData_W:
 	blx VLM5030_WRITE8
 	ldmfd sp!,{r3,pc}
 ;@----------------------------------------------------------------------------
-YM0_R:
+ym2203_0_Run:
+;@----------------------------------------------------------------------------
+	mov r0,#230
+	ldr r1,=ym2203_0
+	b ym2203Run
+;@----------------------------------------------------------------------------
+ym2203_0_R:
 ;@----------------------------------------------------------------------------
 	bic r1,r12,#0x0001
 	cmp r1,#0x1000
 	bne soundRamR
 	tst r12,#1
-	ldr r0,=YM2203_0
+	ldr r0,=ym2203_0
 	bne ym2203DataR
 	b ym2203StatusR
 ;@----------------------------------------------------------------------------
-YM0_W:
+ym2203_0_W:
 ;@----------------------------------------------------------------------------
 	bic r1,r12,#0x0001
 	cmp r1,#0x1000
 	bne soundRamW
 	tst r12,#1
-	ldr r1,=YM2203_0
+	ldr r1,=ym2203_0
 	bne ym2203DataW
 	b ym2203IndexW
 ;@----------------------------------------------------------------------------
@@ -249,7 +249,7 @@ muteSoundGame:
 
 	.section .bss
 	.align 2
-YM2203_0:
+ym2203_0:
 	.space ymSize
 WAVBUFFER:
 	.space 0x1800

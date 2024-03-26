@@ -1,5 +1,7 @@
 # DoubleDribbleDS V0.4.3
 
+This has now been superseded by <https://github.com/FluBBaOfWard/K80DS>.
+
 This is a Double Dribble - Arcade emulator for the NDS.
 It has no tile priority support.
 You should still be able to enjoy the game though. =)
@@ -81,4 +83,4 @@ Fredrik Ahlström
 
 Twitter @TheRealFluBBa
 
-http://www.github.com/FluBBaOfWard
+<http://www.github.com/FluBBaOfWard>

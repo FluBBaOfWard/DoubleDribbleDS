@@ -7,7 +7,7 @@
 	.global empty_R
 	.global empty_W
 	.global rom_W
-	.global ram_W
+	.global sharedRAM_W
 	.global mem6809R0
 	.global mem6809R1
 	.global mem6809R2
@@ -69,7 +69,7 @@ rom_W:						;@ Write ROM address (error)
 #endif
 	.align 2
 ;@----------------------------------------------------------------------------
-ram_W:						;@ Ram write (CPU0 $4000-$5FFF) (CPU1 $0000-$1FFF)
+sharedRAM_W:				;@ Ram write (CPU0 $4000-$5FFF) (CPU1 $0000-$1FFF)
 ;@----------------------------------------------------------------------------
 	bic r1,addy,#0xfe000
 	ldr r2,=SHARED_RAM

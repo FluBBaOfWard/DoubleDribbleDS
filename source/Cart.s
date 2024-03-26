@@ -53,8 +53,6 @@ loadCart: 		;@ Called from C:  r0=rom number, r1=emuflags
 	str r1,emuFlags
 
 	bl doCpuMappingDDribble
-	bl doCpuMappingDDribbleCpu1
-	bl doCpuMappingDDribbleCpu2
 
 	bl gfxReset
 	bl ioReset
@@ -94,28 +92,33 @@ mapBankReg:
 ;@----------------------------------------------------------------------------
 doCpuMappingDDribble:
 ;@----------------------------------------------------------------------------
+stmfd sp!,{lr}
 	adr r2,ddribbleMapping
-	b do6809MainCpuMapping
+	bl do6809MainCpuMapping
 ;@----------------------------------------------------------------------------
 doCpuMappingDDribbleCpu1:
 ;@----------------------------------------------------------------------------
 	adr r2,ddribbleCpu1Mapping
 	ldr r0,=m6809CPU1
-	ldr r1,mainCpu
-	b m6809Mapper
+	ldr r1,=mainCpu
+	ldr r1,[r1]
+	bl m6809Mapper
 ;@----------------------------------------------------------------------------
 doCpuMappingDDribbleCpu2:
 ;@----------------------------------------------------------------------------
 	adr r2,ddribbleCpu2Mapping
 	ldr r0,=m6809CPU2
-	ldr r1,mainCpu
-	b m6809Mapper
+	ldr r1,=mainCpu
+	ldr r1,[r1]
+	bl m6809Mapper
+	ldmfd sp!,{lr}
+	bx lr
 
 ;@----------------------------------------------------------------------------
 ddribbleMapping:						;@ Double Dribble CPU0
-	.long emptySpace, k005885_0R, k005885_0W					;@ IO
+	.long emptySpace, k005885_0_1R, k005885_0_1W				;@ IO
 	.long GFX_RAM0, k005885Ram_0R, k005885Ram_0W				;@ GFX RAM
-	.long SHARED_RAM, mem6809R2, ram_W							;@ RAM
+	.long SHARED_RAM, mem6809R2, sharedRAM_W					;@ RAM
 	.long GFX_RAM1, k005885Ram_1R, k005885Ram_1W				;@ GFX RAM
 	.long 4, mem6809R4, bank_W									;@ ROM
 	.long 5, mem6809R5, bank_W									;@ ROM
@@ -123,7 +126,7 @@ ddribbleMapping:						;@ Double Dribble CPU0
 	.long 7, mem6809R7, bank_W									;@ ROM
 ;@----------------------------------------------------------------------------
 ddribbleCpu1Mapping:					;@ Double Dribble CPU1
-	.long SHARED_RAM, mem6809R0, ram_W							;@ RAM
+	.long SHARED_RAM, mem6809R0, sharedRAM_W					;@ RAM
 	.long SOUND_RAM, DDribbleIO_R, DDribbleIO_W					;@ Sound RAM
 	.long emptySpace, empty_R, empty_W							;@ Empty
 	.long emptySpace, empty_R, empty_W							;@ Empty
@@ -133,7 +136,7 @@ ddribbleCpu1Mapping:					;@ Double Dribble CPU1
 	.long 0xB, mem6809R7, rom_W									;@ ROM
 ;@----------------------------------------------------------------------------
 ddribbleCpu2Mapping:					;@ Double Dribble CPU2
-	.long SOUND_RAM, YM0_R, YM0_W								;@ Sound RAM
+	.long SOUND_RAM, ym2203_0_R, ym2203_0_W						;@ Sound RAM
 	.long emptySpace, empty_R, VLMData_W						;@ VLM write
 	.long emptySpace, empty_R, empty_W							;@ Empty
 	.long emptySpace, empty_R, empty_W							;@ Empty

@@ -28,12 +28,10 @@
 
 	.global k005885Ram_0R
 	.global k005885Ram_1R
-	.global k005885_0R
-	.global k005885_1R
+	.global k005885_0_1R
 	.global k005885Ram_0W
 	.global k005885Ram_1W
-	.global k005885_0W
-	.global k005885_1W
+	.global k005885_0_1W
 
 
 	.syntax unified
@@ -57,7 +55,6 @@ gfxInit:					;@ Called from machineInit
 	ldrb r0,[r0]
 	bl paletteInit				;@ Do palette mapping
 	bl paletteTxAll				;@ Transfer it
-
 
 	ldmfd sp!,{pc}
 
@@ -84,7 +81,6 @@ gfxReset:					;@ Called with CPU reset
 	ldr r0,=cpu01SetNMI
 	ldr r1,=cpu01SetFIRQ
 	ldr r2,=cpu012SetIRQ
-	ldr r3,=GFX_RAM0
 	bl k005885Reset0
 	ldrb r0,gfxChipType
 	bl k005849SetType
@@ -107,7 +103,6 @@ gfxReset:					;@ Called with CPU reset
 	mov r0,#0
 	mov r1,#0
 	mov r2,#0
-	ldr r3,=GFX_RAM1
 	bl k005885Reset1
 	ldrb r0,gfxChipType
 	bl k005849SetType
@@ -269,14 +264,12 @@ scrolLoop2:
 	ldr r1,[r3,r8,lsl#2]
 	add r0,r0,r7
 	add r1,r1,r7
-//	mov r1,r0
 	stmia r4!,{r0-r1}
 	adds r6,r6,r6,lsl#16
 	addcs r7,r7,#0x10000
 	adc r8,r8,#1
 	subs r12,r12,#1
 	bne scrolLoop2
-
 
 
 	mov r6,#REG_BASE
@@ -342,11 +335,11 @@ refreshGfx:					;@ Called from C when changing scaling.
 ;@----------------------------------------------------------------------------
 endFrame:		;@ Called just before screen end (~line 240)	(r0-r2 safe to use)
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r3,koptr,lr}
 
 	adr r0,k005885_1
 	cmp koptr,r0
-	ldmfdeq sp!,{r3,koptr,pc}
+	bxeq lr
+	stmfd sp!,{r3,koptr,lr}
 
 	ldr koptr,=k005885_1
 	ldr r0,=scrollTemp2
@@ -404,11 +397,13 @@ pcePaletteReady:	.long 0
 ;@----------------------------------------------------------------------------
 k005885Reset0:			;@ r0=periodicIrqFunc, r1=frameIrqFunc, r2=frame2IrqFunc
 ;@----------------------------------------------------------------------------
+	ldr r3,=GFX_RAM0
 	adr koptr,k005885_0
 	b k005849Reset
 ;@----------------------------------------------------------------------------
 k005885Reset1:			;@ r0=periodicIrqFunc, r1=frameIrqFunc, r2=frame2IrqFunc
 ;@----------------------------------------------------------------------------
+	ldr r3,=GFX_RAM1
 	adr koptr,k005885_1
 	b k005849Reset
 ;@----------------------------------------------------------------------------
@@ -428,8 +423,7 @@ k005885Ram_1R:				;@ Ram read (0x6000-0x7FFF)
 	bl k005885Ram_R
 	ldmfd sp!,{addy,pc}
 ;@----------------------------------------------------------------------------
-k005885_0R:					;@ I/O read, 0x0000-0x005F
-k005885_1R:					;@ I/O read, 0x0800-0x085F
+k005885_0_1R:				;@ I/O read (0x0000-0x005F / 0x0800-0x085F)
 ;@----------------------------------------------------------------------------
 	cmp addy,#0x0860
 	bpl paletteRead
@@ -458,8 +452,7 @@ k005885Ram_1W:				;@ Ram write (0x6000-0x7FFF)
 	bl k005885Ram_W
 	ldmfd sp!,{addy,pc}
 ;@----------------------------------------------------------------------------
-k005885_0W:					;@ I/O write  (0x0000-0x005F)
-k005885_1W:					;@ I/O write  (0x0800-0x085F)
+k005885_0_1W:				;@ I/O write  (0x0000-0x005F / 0x0800-0x085F)
 ;@----------------------------------------------------------------------------
 	cmp addy,#0x0860
 	bpl paletteWrite
@@ -523,7 +516,7 @@ DMA0BUFF:
 SCROLLBUFF:
 	.space 0x400*2				;@ Scrollbuffer.
 MAPPED_RGB:
-	.space 0x2000				;@ 8 * 0x400
+	.space 0x400				;@ 0x400
 EMUPALBUFF:
 	.space 0x400
 k005885Palette:

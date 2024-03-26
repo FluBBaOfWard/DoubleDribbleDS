@@ -63,14 +63,14 @@ runStart:
 	bl refreshEMUjoypads		;@ Z=1 if communication ok
 
 ;@--------------------------------------
-konamiFrameLoop:
+ddFrameLoop:
 ;@--------------------------------------
 	ldr m6809ptr,=m6809CPU2
 	mov r0,#CYCLE_PSL
 	bl m6809RestoreAndRunXCycles
 	add r0,m6809ptr,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}	;@ Save M6809 state
-	bl YM0_Run
+	bl ym2203_0_Run
 ;@--------------------------------------
 	ldr m6809ptr,=m6809CPU1
 	mov r0,#CYCLE_PSL
@@ -89,7 +89,7 @@ konamiFrameLoop:
 	ldr koptr,=k005885_0
 	bl doScanline
 	cmp r0,#0
-	bne konamiFrameLoop
+	bne ddFrameLoop
 
 ;@--------------------------------------
 	ldr r0,=gGammaValue
@@ -135,7 +135,7 @@ konamiStepLoop:
 	bl m6809RestoreAndRunXCycles
 	add r0,m6809ptr,#m6809Regs
 	stmia r0,{m6809f-m6809pc,m6809sp}	;@ Save M6809 state
-	bl YM0_Run
+	bl ym2203_0_Run
 ;@--------------------------------------
 	ldr m6809ptr,=m6809CPU1
 	mov r0,#CYCLE_PSL
@@ -171,43 +171,38 @@ konamiStepLoop:
 ;@----------------------------------------------------------------------------
 cpu01SetFIRQ:
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r0,m6809ptr,lr}
-	ldr m6809ptr,=m6809CPU0
+	stmfd sp!,{r0,lr}
+	ldr r1,=m6809CPU0
 	bl m6809SetFIRQPin
-	ldmfd sp!,{r0}
-	ldr m6809ptr,=m6809CPU1
-	bl m6809SetFIRQPin
-	ldmfd sp!,{m6809ptr,pc}
+	ldmfd sp!,{r0,lr}
+	ldr r1,=m6809CPU1
+	b m6809SetFIRQPin
 ;@----------------------------------------------------------------------------
 cpu012SetIRQ:
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r0,m6809ptr,lr}
-	ldr m6809ptr,=m6809CPU0
+	stmfd sp!,{r0,lr}
+	ldr r1,=m6809CPU0
 	bl m6809SetIRQPin
 	ldmfd sp,{r0}
-	ldr m6809ptr,=m6809CPU1
+	ldr r1,=m6809CPU1
 	bl m6809SetIRQPin
-	ldmfd sp!,{r0}
-	ldr m6809ptr,=m6809CPU2
-	bl m6809SetIRQPin
-	ldmfd sp!,{m6809ptr,pc}
+	ldmfd sp!,{r0,lr}
+	ldr r1,=m6809CPU2
+	b m6809SetIRQPin
 ;@----------------------------------------------------------------------------
 cpu01SetNMI:
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r0,m6809ptr,lr}
-	ldr m6809ptr,=m6809CPU0
+	stmfd sp!,{r0,lr}
+	ldr r1,=m6809CPU0
 	bl m6809SetNMIPin
-	ldmfd sp!,{r0}
-	ldr m6809ptr,=m6809CPU1
-	bl m6809SetNMIPin
-	ldmfd sp!,{m6809ptr,pc}
+	ldmfd sp!,{r0,lr}
+	ldr r1,=m6809CPU1
+	b m6809SetNMIPin
 ;@----------------------------------------------------------------------------
 cpu2SetIRQ:
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{m6809ptr,lr}
-	ldr m6809ptr,=m6809CPU2
-	bl m6809SetIRQPin
-	ldmfd sp!,{m6809ptr,pc}
+	ldr r1,=m6809CPU2
+	b m6809SetIRQPin
 
 ;@----------------------------------------------------------------------------
 cpuInit:			;@ Called by machineInit
@@ -233,11 +228,9 @@ cpuReset:		;@ Called by loadCart/resetGame
 ;@--------------------------------------
 	ldr r0,=m6809CPU0
 	bl m6809Reset
-
 ;@--------------------------------------
 	ldr r0,=m6809CPU1
 	bl m6809Reset
-
 ;@--------------------------------------
 	ldr r0,=m6809CPU2
 	bl m6809Reset
