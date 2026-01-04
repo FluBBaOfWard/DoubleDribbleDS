@@ -5,8 +5,6 @@
 extern "C" {
 #endif
 
-#include "DoubleDribble.h"
-
 #define FILEEXTENSIONS ".zip"
 
 int loadSettings(void);

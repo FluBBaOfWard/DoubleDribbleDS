@@ -247,7 +247,11 @@ muteSoundGame:
 	.byte 0
 	.space 2
 
+#ifdef GBA
+	.section .sbss				;@ This is EWRAM on GBA with devkitARM
+#else
 	.section .bss
+#endif
 	.align 2
 ym2203_0:
 	.space ymSize

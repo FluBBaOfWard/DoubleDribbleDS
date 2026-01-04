@@ -501,7 +501,11 @@ gfxChipType:
 	.byte CHIP_K005885			;@ K005849 or K005885
 	.space 3
 
+#ifdef GBA
+	.section .sbss				;@ This is EWRAM on GBA with devkitARM
+#else
 	.section .bss
+#endif
 	.align 2
 scrollTemp:
 	.space 0x100*4

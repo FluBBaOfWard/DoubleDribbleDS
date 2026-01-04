@@ -8,6 +8,8 @@
 #include "ARM6809/ARM6809.h"
 #include "K005849/K005849.h"
 
+extern u8 gGammaValue;
+
 static int saveRam(void *statePtr);
 static int loadRam(const void *statePtr);
 static int getRamSize();
